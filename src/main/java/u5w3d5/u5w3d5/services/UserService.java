@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import u5w3d5.u5w3d5.dao.UserDAO;
+import u5w3d5.u5w3d5.entities.Events;
 import u5w3d5.u5w3d5.entities.User;
 import u5w3d5.u5w3d5.exception.NotFoundException;
 
@@ -46,5 +47,7 @@ public class UserService {
     public User findByEmail(String email) {
         return usersDAO.findByEmail(email).orElseThrow(() -> new NotFoundException("Email " + email + " non trovata"));
     }
+
+
 
 }

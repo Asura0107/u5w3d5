@@ -5,12 +5,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 import u5w3d5.u5w3d5.dao.EventsDAO;
 import u5w3d5.u5w3d5.entities.Events;
+import u5w3d5.u5w3d5.entities.User;
+import u5w3d5.u5w3d5.exception.BadRequestException;
 import u5w3d5.u5w3d5.exception.NotFoundException;
 
 import java.util.UUID;
-
+@Service
 public class EventsService {
     @Autowired
     private EventsDAO eventsDAO;
@@ -37,5 +40,6 @@ public class EventsService {
         Events found = this.findById(EventsId);
         eventsDAO.delete(found);
     }
+
 
 }

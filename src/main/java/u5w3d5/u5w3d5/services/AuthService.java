@@ -6,16 +6,21 @@ import org.springframework.stereotype.Service;
 import u5w3d5.u5w3d5.dao.UserDAO;
 import u5w3d5.u5w3d5.dto.NewUserDTO;
 import u5w3d5.u5w3d5.dto.UserLoginDTO;
+import u5w3d5.u5w3d5.entities.Events;
 import u5w3d5.u5w3d5.entities.User;
 import u5w3d5.u5w3d5.exception.BadRequestException;
 import u5w3d5.u5w3d5.exception.UnauthorizedException;
 import u5w3d5.u5w3d5.security.JWTTools;
+
+import java.util.UUID;
 
 
 @Service
 public class AuthService {
     @Autowired
     private UserService usersService;
+    @Autowired
+    private EventsService eventsService;
 
     @Autowired
     private PasswordEncoder bcrypt;
@@ -42,5 +47,14 @@ public class AuthService {
         User newUser = new User(payload.name(), payload.surname(),
                 payload.email(), bcrypt.encode(payload.password()));
         return usersDAO.save(newUser);
+    }
+
+    public void reserve(UUID EventsId, User user){
+        Events found=this.eventsService.findById(EventsId);
+        if (found.getMaxposti()<found.getUsers().size()){
+            found.addUser(user);
+        }else {
+            throw new BadRequestException("tutti i posti sono già prenotati");
+        }
     }
 }
