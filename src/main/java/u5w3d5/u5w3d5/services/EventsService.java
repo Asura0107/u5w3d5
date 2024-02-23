@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import u5w3d5.u5w3d5.dao.EventsDAO;
+import u5w3d5.u5w3d5.dto.EventDTO;
 import u5w3d5.u5w3d5.entities.Events;
 import u5w3d5.u5w3d5.entities.User;
 import u5w3d5.u5w3d5.exception.BadRequestException;
@@ -35,10 +36,25 @@ public class EventsService {
 
         return eventsDAO.save(found);
     }
+    public Events save(EventDTO newevent) {
+        return eventsDAO.save(
+                new Events(newevent.title(),newevent.description(),newevent.date(),newevent.place(), newevent.maxposti())
+        );
+    }
 
     public void findByIdAndDelete(UUID EventsId) {
         Events found = this.findById(EventsId);
         eventsDAO.delete(found);
+    }
+    public void reserve(UUID EventsId, User user){
+        Events found=this.findById(EventsId);
+        boolean user1= found.getUsers().stream().noneMatch(u-> u.getId().equals(user.getId()));
+        if (found.getUsers().size()< found.getMaxposti() || user1){
+            found.addUser(user);
+            eventsDAO.save(found);
+        }else {
+            throw new BadRequestException("tutti i posti sono già prenotati");
+        }
     }
 
 

@@ -19,8 +19,6 @@ import java.util.UUID;
 public class AuthService {
     @Autowired
     private UserService usersService;
-    @Autowired
-    private EventsService eventsService;
 
     @Autowired
     private PasswordEncoder bcrypt;
@@ -49,12 +47,5 @@ public class AuthService {
         return usersDAO.save(newUser);
     }
 
-    public void reserve(UUID EventsId, User user){
-        Events found=this.eventsService.findById(EventsId);
-        if (found.getMaxposti()<found.getUsers().size()){
-            found.addUser(user);
-        }else {
-            throw new BadRequestException("tutti i posti sono già prenotati");
-        }
-    }
+
 }

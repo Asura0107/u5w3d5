@@ -6,17 +6,25 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import u5w3d5.u5w3d5.dao.EventsDAO;
 import u5w3d5.u5w3d5.dao.UserDAO;
 import u5w3d5.u5w3d5.entities.Events;
 import u5w3d5.u5w3d5.entities.User;
+import u5w3d5.u5w3d5.exception.BadRequestException;
 import u5w3d5.u5w3d5.exception.NotFoundException;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserService {
     @Autowired
     private UserDAO usersDAO;
+    @Autowired
+    private EventsService eventsService;
+    @Autowired
+    private EventsDAO eventsDAO;
 
 
     public Page<User> getUsers(int pageNumber, int size, String orderBy) {
@@ -48,6 +56,21 @@ public class UserService {
         return usersDAO.findByEmail(email).orElseThrow(() -> new NotFoundException("Email " + email + " non trovata"));
     }
 
+    public List<Events> getAllEvent(UUID userId){
+        User user=this.findById(userId);
+        return user.getEvents();
+    }
+    public void eleminateEvent(UUID userId,UUID eventId){
+        User user=this.findById(userId);
+        Optional<Events> events1= user.getEvents().stream().filter(u -> u.getId().equals(eventId)).findFirst();
+        if (events1.isPresent()){
+            Events removeEvent= events1.get();
+            user.getEvents().remove(removeEvent);
+            usersDAO.save(user);
+        }else {
+            throw new NotFoundException("non è stato trovato l'evento");
+        }
+    }
 
 
 }

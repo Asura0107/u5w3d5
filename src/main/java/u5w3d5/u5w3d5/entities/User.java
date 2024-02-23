@@ -1,5 +1,6 @@
 package u5w3d5.u5w3d5.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,12 +29,8 @@ public class User implements UserDetails {
     private String surname;
     private String email;
     private String password;
-    @ManyToMany
-    @JoinTable(
-            name = "user_events",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "events_id")
-    )
+    @ManyToMany(mappedBy = "users")
+    @JsonIgnore
     private List<Events> events;
 
     @Enumerated(EnumType.STRING)
