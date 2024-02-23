@@ -18,59 +18,65 @@ import java.util.UUID;
 @RequestMapping("/users")
 public class UsersController {
 
-	@Autowired
-	private UserService usersService;
+    @Autowired
+    private UserService usersService;
 
-	@GetMapping
-	public Page<User> getAllUsers(@RequestParam(defaultValue = "0") int page,
-								  @RequestParam(defaultValue = "10") int size,
-								  @RequestParam(defaultValue = "id") String orderBy
-	) {
-		return this.usersService.getUsers(page, size, orderBy);
-	}
+    @GetMapping
+    public Page<User> getAllUsers(@RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "10") int size,
+                                  @RequestParam(defaultValue = "id") String orderBy
+    ) {
+        return this.usersService.getUsers(page, size, orderBy);
+    }
 
-	@GetMapping("/me")
-	public User getProfile(@AuthenticationPrincipal User currentAuthenticatedUser) {
-		return currentAuthenticatedUser;
-	}
+    @GetMapping("/me")
+    public User getProfile(@AuthenticationPrincipal User currentAuthenticatedUser) {
+        return currentAuthenticatedUser;
+    }
 
-	@GetMapping("/me/myevent")
-	public List<Events> getEvent(@AuthenticationPrincipal User currentAuthenticatedUser) {
-		return this.usersService.getAllEvent(currentAuthenticatedUser.getId());
-	}
+    @GetMapping("/me/myevent")
+    public List<Events> getEvent(@AuthenticationPrincipal User currentAuthenticatedUser) {
+        return this.usersService.getAllEvent(currentAuthenticatedUser.getId());
+    }
 
-	@PutMapping("/me")
-	public User getMeAndUpdate(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestBody User updatedUser) {
-		return this.usersService.findByIdAndUpdate(currentAuthenticatedUser.getId(), updatedUser);
-	}
+    @DeleteMapping("/me/myevent")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletemyEvent(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestParam UUID eventId) {
+        this.usersService.eleminateEvent(currentAuthenticatedUser.getId(), eventId);
 
-	@DeleteMapping("/me")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void getMeAndDelete(@AuthenticationPrincipal User currentAuthenticatedUser) {
-		this.usersService.findByIdAndDelete(currentAuthenticatedUser.getId());
-	}
+    }
+
+    @PutMapping("/me")
+    public User getMeAndUpdate(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestBody User updatedUser) {
+        return this.usersService.findByIdAndUpdate(currentAuthenticatedUser.getId(), updatedUser);
+    }
+
+    @DeleteMapping("/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void getMeAndDelete(@AuthenticationPrincipal User currentAuthenticatedUser) {
+        this.usersService.findByIdAndDelete(currentAuthenticatedUser.getId());
+    }
 
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
+    public User findById(@PathVariable UUID id) {
+        return this.usersService.findById(id);
+    }
 
-	@GetMapping("/{id}")
-	@PreAuthorize("hasAuthority('ORGANIZZATORE')")
-	public User findById(@PathVariable UUID id) {
-		return this.usersService.findById(id);
-	}
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
+    public User findByIdAndUpdate(@PathVariable UUID id, @RequestBody User updatedUser) {
 
-	@PutMapping("/{id}")
-	@PreAuthorize("hasAuthority('ORGANIZZATORE')")
-	public User findByIdAndUpdate(@PathVariable UUID id, @RequestBody User updatedUser) {
+        return this.usersService.findByIdAndUpdate(id, updatedUser);
+    }
 
-		return this.usersService.findByIdAndUpdate(id, updatedUser);
-	}
-
-	@DeleteMapping("/{id}")
-	@PreAuthorize("hasAuthority('ORGANIZZATORE')")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void findByIdAndDelete(@PathVariable UUID id) {
-		this.usersService.findByIdAndDelete(id);
-	}
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void findByIdAndDelete(@PathVariable UUID id) {
+        this.usersService.findByIdAndDelete(id);
+    }
 
 }
