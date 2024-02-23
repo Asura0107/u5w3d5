@@ -37,11 +37,13 @@ public class EventController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ORGANIZZATORE')")
+    @ResponseStatus(HttpStatus.CREATED)
     public Events saveEvent(@RequestBody EventDTO eventDTO){
         return this.eventsService.save(eventDTO);
     }
 
     @PostMapping("/me/add/event")
+    @ResponseStatus(HttpStatus.CREATED)
     public Events aggiungiEvento(@RequestParam UUID eventId, @AuthenticationPrincipal User currentAuthenticatedUser){
         this.eventsService.reserve(eventId,currentAuthenticatedUser);
         return this.eventsService.findById(eventId);
