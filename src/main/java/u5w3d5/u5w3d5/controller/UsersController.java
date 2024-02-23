@@ -34,10 +34,10 @@ public class UsersController {
 		return currentAuthenticatedUser;
 	}
 
-//	@GetMapping("/me/myevent")
-//	public List<Events> getEvent(@AuthenticationPrincipal User currentAuthenticatedUser) {
-//		return currentAuthenticatedUser.getEvents();
-//	}
+	@GetMapping("/me/myevent")
+	public List<Events> getEvent(@AuthenticationPrincipal User currentAuthenticatedUser) {
+		return this.usersService.getAllEvent(currentAuthenticatedUser.getId());
+	}
 
 	@PutMapping("/me")
 	public User getMeAndUpdate(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestBody User updatedUser) {

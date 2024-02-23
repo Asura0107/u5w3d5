@@ -53,6 +53,10 @@ public class UserService {
         return usersDAO.findByEmail(email).orElseThrow(() -> new NotFoundException("Email " + email + " non trovata"));
     }
 
+    public List<Events> getAllEvent(UUID userId){
+        User user=this.findById(userId);
+        return user.getEvents();
+    }
 
 
 }
