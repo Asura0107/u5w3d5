@@ -53,14 +53,6 @@ public class UserService {
         return usersDAO.findByEmail(email).orElseThrow(() -> new NotFoundException("Email " + email + " non trovata"));
     }
 
-    public void reserve(UUID EventsId, User user){
-        Events found=this.eventsService.findById(EventsId);
-        Optional<User> user1= found.getUsers().stream().filter(u-> u.getId()==user.getId()).findFirst();
-        if (found.getMaxposti()<found.getUsers().size() && user1.isEmpty()){
-            found.addUser(user);
-        }else {
-            throw new BadRequestException("tutti i posti sono già prenotati");
-        }
-    }
+
 
 }

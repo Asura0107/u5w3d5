@@ -8,9 +8,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import u5w3d5.u5w3d5.dto.EventDTO;
 import u5w3d5.u5w3d5.entities.Events;
+import u5w3d5.u5w3d5.entities.User;
 import u5w3d5.u5w3d5.services.EventsService;
 import u5w3d5.u5w3d5.services.EventsService;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -39,6 +41,11 @@ public class EventController {
         return this.eventsService.save(eventDTO);
     }
 
+    @PostMapping("/me/add/event")
+    public Events aggiungiEvento(@RequestParam UUID eventId, @AuthenticationPrincipal User currentAuthenticatedUser){
+        this.eventsService.reserve(eventId,currentAuthenticatedUser);
+        return this.eventsService.findById(eventId);
+    }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ORGANIZZATORE')")

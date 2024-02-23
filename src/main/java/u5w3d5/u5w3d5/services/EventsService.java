@@ -46,6 +46,16 @@ public class EventsService {
         Events found = this.findById(EventsId);
         eventsDAO.delete(found);
     }
+    public void reserve(UUID EventsId, User user){
+        Events found=this.findById(EventsId);
+        boolean user1= found.getUsers().stream().noneMatch(u-> u.getId().equals(user.getId()));
+        if (found.getUsers().size()< found.getMaxposti() || user1){
+            found.addUser(user);
+            eventsDAO.save(found);
+        }else {
+            throw new BadRequestException("tutti i posti sono già prenotati");
+        }
+    }
 
 
 }

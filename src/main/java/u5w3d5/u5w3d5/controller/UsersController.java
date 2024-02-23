@@ -49,10 +49,7 @@ public class UsersController {
 	public void getMeAndDelete(@AuthenticationPrincipal User currentAuthenticatedUser) {
 		this.usersService.findByIdAndDelete(currentAuthenticatedUser.getId());
 	}
-	@PostMapping("/me/add/event")
-	public void aggiungiEvento(@RequestParam UUID eventId,@AuthenticationPrincipal User currentAuthenticatedUser){
-		this.usersService.reserve(eventId,currentAuthenticatedUser);
-	}
+
 
 
 	@GetMapping("/{id}")
