@@ -13,6 +13,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import u5w3d5.u5w3d5.entities.User;
 import u5w3d5.u5w3d5.exception.UnauthorizedException;
+import u5w3d5.u5w3d5.services.UserService;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -24,7 +25,7 @@ public class JWTFilter extends OncePerRequestFilter {
 	private JWTTools jwtTools;
 
 	@Autowired
-	private UsersService usersService;
+	private UserService usersService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -39,7 +40,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
 		jwtTools.verifyToken(accessToken);
 
-
+		String id = jwtTools.extractIdFromToken(accessToken);
 		User user = usersService.findById(UUID.fromString(id));
 
 		Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
