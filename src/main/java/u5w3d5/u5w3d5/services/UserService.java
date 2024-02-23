@@ -9,14 +9,19 @@ import org.springframework.stereotype.Service;
 import u5w3d5.u5w3d5.dao.UserDAO;
 import u5w3d5.u5w3d5.entities.Events;
 import u5w3d5.u5w3d5.entities.User;
+import u5w3d5.u5w3d5.exception.BadRequestException;
 import u5w3d5.u5w3d5.exception.NotFoundException;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserService {
     @Autowired
     private UserDAO usersDAO;
+    @Autowired
+    private EventsService eventsService;
 
 
     public Page<User> getUsers(int pageNumber, int size, String orderBy) {
@@ -48,6 +53,14 @@ public class UserService {
         return usersDAO.findByEmail(email).orElseThrow(() -> new NotFoundException("Email " + email + " non trovata"));
     }
 
-
+    public void reserve(UUID EventsId, User user){
+        Events found=this.eventsService.findById(EventsId);
+        Optional<User> user1= found.getUsers().stream().filter(u-> u.getId()==user.getId()).findFirst();
+        if (found.getMaxposti()<found.getUsers().size() && user1.isEmpty()){
+            found.addUser(user);
+        }else {
+            throw new BadRequestException("tutti i posti sono già prenotati");
+        }
+    }
 
 }
