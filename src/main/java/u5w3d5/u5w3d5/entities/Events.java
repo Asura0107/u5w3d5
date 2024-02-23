@@ -21,7 +21,7 @@ public class Events {
     private UUID id;
     private String title;
     private String description;
-    private LocalDate date;
+    private String date;
     private String place;
     private int maxposti;
     @ManyToMany
@@ -33,7 +33,7 @@ public class Events {
     private List<User> users;
 
 
-    public Events(String title, String description, LocalDate date, String place, int maxposti) {
+    public Events(String title, String description, String date, String place, int maxposti) {
         this.title = title;
         this.description = description;
         this.date = date;
